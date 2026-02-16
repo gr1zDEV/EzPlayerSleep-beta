@@ -1,0 +1,20 @@
+name: EzPlayerSleep
+version: 1.0.0
+main: com.ezinnovations.playersleep.EzPlayerSleep
+api-version: 1.19
+author: Grizz
+description: Configurable player sleep percentage for skipping night
+
+commands:
+  playersleep:
+    description: Manage player sleep settings
+    usage: /playersleep <info|set|reload>
+    aliases: [ps, sleep]
+
+permissions:
+  ezplayersleep.admin:
+    description: Access to admin commands
+    default: op
+  ezplayersleep.info:
+    description: Access to info command
+    default: true

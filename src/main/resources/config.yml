@@ -1,1 +1,27 @@
+# EzPlayerSleep Configuration
+# 
+# Set what percentage of players need to be sleeping to skip the night
+# Default: 50 (50% of players)
 
+# Percentage of players required to sleep (1-100)
+sleep-percentage: 50
+
+# Message settings
+messages:
+  # Enable/disable sleep notifications
+  enabled: true
+  
+  # Message shown when a player enters bed
+  # Placeholders: {sleeping}, {required}, {percentage}
+  sleep-notification: "&e{sleeping}/{required} players sleeping ({percentage}% required)"
+  
+  # Message shown when night is skipped
+  night-skipped: "&aEnough players are sleeping. Skipping night..."
+
+# Reset phantom spawn timers when night is skipped
+# This prevents phantoms from spawning even if using low sleep percentage
+reset-phantom-timers: true
+
+# Prevent sleeping during storms (requires clear weather)
+# Set to true if you want players to only skip night, not storms
+prevent-storm-sleep: false
