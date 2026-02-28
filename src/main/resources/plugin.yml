@@ -2,6 +2,7 @@ name: EzPlayerSleep
 version: 1.0.0
 main: com.ezinnovations.playersleep.EzPlayerSleep
 api-version: 1.19
+folia-supported: true
 author: Grizz
 description: Configurable player sleep percentage for skipping night
 
