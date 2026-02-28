@@ -9,6 +9,7 @@ public class EzPlayerSleep extends JavaPlugin {
     
     private static EzPlayerSleep instance;
     private ConfigManager configManager;
+    private SchedulerAdapter schedulerAdapter;
     
     @Override
     public void onEnable() {
@@ -17,6 +18,7 @@ public class EzPlayerSleep extends JavaPlugin {
         // Initialize config
         saveDefaultConfig();
         configManager = new ConfigManager(this);
+        schedulerAdapter = new SchedulerAdapter(this);
         
         // Register events
         getServer().getPluginManager().registerEvents(new SleepListener(this), this);
@@ -39,6 +41,10 @@ public class EzPlayerSleep extends JavaPlugin {
     
     public ConfigManager getConfigManager() {
         return configManager;
+    }
+
+    public SchedulerAdapter getSchedulerAdapter() {
+        return schedulerAdapter;
     }
     
     /**
