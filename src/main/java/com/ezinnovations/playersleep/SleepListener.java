@@ -69,7 +69,7 @@ public class SleepListener implements Listener {
         
         // Check if enough players are sleeping
         if (sleeping >= required) {
-            skipNight(world);
+            plugin.getSchedulerAdapter().runGlobal(() -> skipNight(world));
         }
     }
     
