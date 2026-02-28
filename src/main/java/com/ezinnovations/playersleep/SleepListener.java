@@ -7,7 +7,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class SleepListener implements Listener {
     
@@ -32,25 +31,16 @@ public class SleepListener implements Listener {
         }
         
         // Delay to ensure player is actually sleeping
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                checkSleepStatus(world);
-            }
-        }.runTaskLater(plugin, 5L); // 5 tick delay
+        plugin.getSchedulerAdapter().runDelayed(player, () -> checkSleepStatus(world), 5L);
     }
     
     @EventHandler
     public void onPlayerWake(PlayerBedLeaveEvent event) {
-        World world = event.getPlayer().getWorld();
-        
+        Player player = event.getPlayer();
+        World world = player.getWorld();
+
         // Delay to ensure sleep count is updated
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                checkSleepStatus(world);
-            }
-        }.runTaskLater(plugin, 2L);
+        plugin.getSchedulerAdapter().runDelayed(player, () -> checkSleepStatus(world), 2L);
     }
     
     private void checkSleepStatus(World world) {
