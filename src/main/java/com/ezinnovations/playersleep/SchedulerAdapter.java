@@ -18,12 +18,16 @@ public class SchedulerAdapter {
     private final boolean folia;
     private final Method getSchedulerMethod;
     private final Method runDelayedMethod;
+    private final Method getGlobalRegionSchedulerMethod;
+    private final Method executeGlobalMethod;
 
     public SchedulerAdapter(Plugin plugin) {
         this.plugin = plugin;
         boolean foliaDetected = false;
         Method schedulerMethod = null;
         Method delayedMethod = null;
+        Method globalSchedulerMethod = null;
+        Method globalExecuteMethod = null;
 
         try {
             Class<?> scheduledTaskClass = Class.forName(FOLIA_TASK_CLASS);
@@ -36,6 +40,11 @@ public class SchedulerAdapter {
                 Runnable.class,
                 long.class
             );
+
+            globalSchedulerMethod = Bukkit.class.getMethod("getGlobalRegionScheduler");
+            Class<?> globalSchedulerClass = globalSchedulerMethod.getReturnType();
+            globalExecuteMethod = globalSchedulerClass.getMethod("execute", Plugin.class, Runnable.class);
+
             if (scheduledTaskClass != null) {
                 foliaDetected = true;
             }
@@ -46,6 +55,8 @@ public class SchedulerAdapter {
         this.folia = foliaDetected;
         this.getSchedulerMethod = schedulerMethod;
         this.runDelayedMethod = delayedMethod;
+        this.getGlobalRegionSchedulerMethod = globalSchedulerMethod;
+        this.executeGlobalMethod = globalExecuteMethod;
 
         if (folia) {
             plugin.getLogger().info("Folia environment detected. Using entity scheduler for delayed sleep checks.");
@@ -64,6 +75,21 @@ public class SchedulerAdapter {
         } catch (ReflectiveOperationException ex) {
             plugin.getLogger().log(Level.WARNING, "Failed to schedule task on Folia scheduler, falling back to Bukkit scheduler.", ex);
             Bukkit.getScheduler().runTaskLater(plugin, task, ticks);
+        }
+    }
+
+    public void runGlobal(Runnable task) {
+        if (!folia) {
+            Bukkit.getScheduler().runTask(plugin, task);
+            return;
+        }
+
+        try {
+            Object globalRegionScheduler = getGlobalRegionSchedulerMethod.invoke(null);
+            executeGlobalMethod.invoke(globalRegionScheduler, plugin, task);
+        } catch (ReflectiveOperationException ex) {
+            plugin.getLogger().log(Level.WARNING, "Failed to schedule task on Folia global region scheduler, falling back to Bukkit scheduler.", ex);
+            Bukkit.getScheduler().runTask(plugin, task);
         }
     }
 }
